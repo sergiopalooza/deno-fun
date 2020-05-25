@@ -1,3 +1,5 @@
+import {cron} from 'https://deno.land/x/deno_cron/cron.ts';
+
 const taskIds: Array<string> = [
     "2860758634",
     "2860758746",
@@ -15,7 +17,6 @@ const taskIds: Array<string> = [
     "3412514316"
 ];
 
-
 async function openTasks (tasks: Array<string>){
     for (const task of tasks) {
         console.log(task);
@@ -28,4 +29,11 @@ async function openTasks (tasks: Array<string>){
     }
 }
 
+// Reopen all tasks on start
 await openTasks(taskIds);
+
+// Reopen all tasks at midnight
+cron('0 0 * * *', async () => {
+    await openTasks(taskIds);
+    console.log('CRON JOB WAS RUN');
+});
